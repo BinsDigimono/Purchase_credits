@@ -3,37 +3,35 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>{% block title %}単位マーケット{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-  <header class="header">
-    <a class="header__brand" href="{% url 'shop:subject_list' %}">単位マーケット</a>
-    <nav class="header__nav">
-      <a href="{% url 'shop:cart' %}">カート</a>
-      <a href="{% url 'shop:order_list' %}">申込履歴</a>
-      <a href="{% url 'dm:thread_list' %}">メッセージ</a>
-      <span class="header__user">{{ user }}</span>
+  <header>
+    <a class="logo" href="{% url 'shop:subject_list' %}">単位マーケット</a>
+    <a href="{% url 'shop:subject_list' %}">科目一覧</a>
+    <a href="{% url 'shop:cart' %}">カート</a>
+    <a href="{% url 'shop:order_list' %}">申込履歴</a>
+    <a href="{% url 'dm:thread_list' %}">メッセージ</a>
+    <span class="user">
+      {{ user }} さん
       <form method="post" action="{% url 'accounts:logout' %}">
         {% csrf_token %}
-        <button class="linkbutton" type="submit">ログアウト</button>
+        <button type="submit">ログアウト</button>
       </form>
-    </nav>
+    </span>
   </header>
 
-  <main class="page">
+  <main>
     {% if messages %}
-      <ul class="flash">
+      <ul class="messages">
         {% for message in messages %}
-          <li class="flash__item flash__item--{{ message.tags }}">{{ message }}</li>
+          <li class="{{ message.tags }}">{{ message }}</li>
         {% endfor %}
       </ul>
     {% endif %}
     {% block content %}{% endblock %}
   </main>
-
-  <footer class="footer">取扱注意。学外への持ち出しを禁じます。</footer>
 </body>
 </html>

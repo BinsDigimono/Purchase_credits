@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}申込 #{{ order.pk }} | 単位マーケット{% endblock %}
+{% block title %}申込 {{ order.pk }} | 単位マーケット{% endblock %}
 
 {% block content %}
-  <p class="back"><a href="{% url 'shop:order_list' %}">← 申込履歴</a></p>
+  <p><a href="{% url 'shop:order_list' %}">← 申込履歴</a></p>
 
-  <h1 class="title">申込 #{{ order.pk }}</h1>
-  <p class="meta">{{ order.created_at|date:"Y年n月j日 H:i" }}</p>
+  <h1>申込 {{ order.pk }}</h1>
+  <p>{{ order.created_at|date:"Y/m/d H:i" }}</p>
 
-  <table class="table">
+  <table>
     <tr><th>科目コード</th><th>科目名</th><th>担当</th><th class="num">価格</th></tr>
     {% for item in order.items.all %}
       <tr>

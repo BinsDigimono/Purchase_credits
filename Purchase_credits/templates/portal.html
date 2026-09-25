@@ -3,43 +3,31 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>学内情報ポータル</title>
   <link rel="stylesheet" href="{% static 'css/portal.css' %}">
 </head>
-<body class="portal">
-  <main class="portal__box">
-    <p class="portal__eyebrow">学内情報ポータル</p>
-    <h1 class="portal__title">システムメンテナンス中</h1>
-    <p class="portal__lead">
-      設備更新のため、一般向けの各種案内は現在停止しています。
+<body>
+  <div class="box">
+    <h1>システムメンテナンス中</h1>
+    <p>
+      設備更新のため、一般向けの各種案内は現在停止しています。<br>
       復旧の見込みは学内掲示およびメールでお知らせします。
     </p>
+    <hr>
 
-    <form class="portal__form" method="post">
+    <p>関係者の方はサインインしてください。</p>
+    <form method="post">
       {% csrf_token %}
-      <p class="portal__note">関係者の方はサインインしてください。</p>
-
-      {% if form.non_field_errors %}
-        <ul class="portal__errors">
-          {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
-        </ul>
-      {% endif %}
-
-      <label class="portal__field">
-        <span>ユーザ名</span>
-        {{ form.username }}
-      </label>
-      <label class="portal__field">
-        <span>パスワード</span>
-        {{ form.password }}
-      </label>
-
-      <button class="portal__submit" type="submit">サインイン</button>
+      {% for error in form.non_field_errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+      <label>ユーザ名 {{ form.username }}</label>
+      <label>パスワード {{ form.password }}</label>
+      <button type="submit">サインイン</button>
     </form>
 
-    <p class="portal__contact">お問い合わせ: 情報基盤センター（内線 2200）</p>
-  </main>
+    <p class="small">お問い合わせ: 情報基盤センター（内線 2200）</p>
+  </div>
 </body>
 </html>

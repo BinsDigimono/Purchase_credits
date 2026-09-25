@@ -3,39 +3,36 @@
 {% block title %}{{ partner }} | 単位マーケット{% endblock %}
 
 {% block content %}
-  <p class="back"><a href="{% url 'dm:thread_list' %}">← メッセージ</a></p>
+  <p><a href="{% url 'dm:thread_list' %}">← メッセージ</a></p>
 
-  <section class="chat">
-    <div class="chat__header">{{ partner }}</div>
+  <h1>{{ partner }}</h1>
 
-    <ul class="chat__log">
-      {% for message in chat %}
-        <li class="bubble {% if message.sender == user %}bubble--mine{% else %}bubble--yours{% endif %}">
-          <p class="bubble__text">{{ message.body|linebreaksbr }}</p>
-          <p class="bubble__meta">
-            {% if message.is_ai %}<span class="bubble__ai">AI生成</span>{% endif %}
-            {% if message.sender == user and message.read_at %}<span class="bubble__read">既読</span>{% endif %}
-            {{ message.created_at|date:"n/j H:i" }}
-          </p>
-        </li>
-      {% empty %}
-        <li class="empty">まだメッセージはありません。</li>
-      {% endfor %}
-    </ul>
+  <div class="chat">
+    {% for message in chat %}
+      <div class="msg {% if message.sender == user %}mine{% endif %}">
+        <div class="text">{{ message.body|linebreaksbr }}</div>
+        <div class="info">
+          {% if message.is_ai %}AI生成{% endif %}
+          {% if message.sender == user and message.read_at %}既読{% endif %}
+          {{ message.created_at|date:"m/d H:i" }}
+        </div>
+      </div>
+    {% empty %}
+      <p>まだメッセージはありません。</p>
+    {% endfor %}
+  </div>
 
-    <form class="composer" method="post" action="{% url 'dm:send' thread.pk %}">
+  <form method="post" action="{% url 'dm:send' thread.pk %}">
+    {% csrf_token %}
+    <textarea name="body" rows="3">{{ draft }}</textarea>
+    <button type="submit">送信</button>
+  </form>
+
+  {% if is_professor %}
+    <br>
+    <form method="post" action="{% url 'dm:ai_refuse' thread.pk %}">
       {% csrf_token %}
-      <textarea class="composer__input" name="body" rows="2"
-                placeholder="メッセージを入力">{{ draft }}</textarea>
-      <button class="btn" type="submit">送信</button>
+      <button type="submit">AIで断る</button>
     </form>
-
-    {% if is_professor %}
-      <form class="refuse" method="post" action="{% url 'dm:ai_refuse' thread.pk %}">
-        {% csrf_token %}
-        <button class="btn btn--ghost" type="submit">AI で断る</button>
-        <span class="refuse__note">断りの文面を作ってそのまま送信します。</span>
-      </form>
-    {% endif %}
-  </section>
+  {% endif %}
 {% endblock %}

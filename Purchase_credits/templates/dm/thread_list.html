@@ -3,28 +3,23 @@
 {% block title %}メッセージ | 単位マーケット{% endblock %}
 
 {% block content %}
-  <h1 class="title">メッセージ</h1>
+  <h1>メッセージ</h1>
 
   {% if threads %}
-    <ul class="threads">
+    <table>
+      <tr><th>相手</th><th>最新のメッセージ</th><th>日時</th></tr>
       {% for thread in threads %}
-        <li class="thread">
-          <a class="thread__link" href="{{ thread.get_absolute_url }}">
-            <span class="thread__body">
-              <span class="thread__name">{{ thread.partner_user }}</span>
-              <span class="thread__preview">
-                {{ thread.last_message.body|default:"（まだメッセージはありません）"|truncatechars:40 }}
-              </span>
-            </span>
-            <span class="thread__side">
-              <span class="thread__time">{{ thread.updated_at|date:"n/j H:i" }}</span>
-              {% if thread.unread %}<span class="badge">{{ thread.unread }}</span>{% endif %}
-            </span>
-          </a>
-        </li>
+        <tr>
+          <td>
+            <a href="{{ thread.get_absolute_url }}">{{ thread.partner_user }}</a>
+            {% if thread.unread %}<span class="unread">({{ thread.unread }})</span>{% endif %}
+          </td>
+          <td>{{ thread.last_message.body|truncatechars:30 }}</td>
+          <td>{{ thread.updated_at|date:"m/d H:i" }}</td>
+        </tr>
       {% endfor %}
-    </ul>
+    </table>
   {% else %}
-    <p class="empty">やり取りはまだありません。科目の詳細から担当教授に相談できます。</p>
+    <p>やり取りはまだありません。</p>
   {% endif %}
 {% endblock %}
