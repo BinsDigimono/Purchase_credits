@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}科目一覧 | 単位マーケット{% endblock %}
+
+{% block content %}
+  <h1 class="title">科目一覧</h1>
+
+  <form class="search" method="get">
+    <input class="search__input" type="search" name="q" value="{{ q }}"
+           placeholder="科目名・コード・担当者で検索">
+    <button class="btn" type="submit">検索</button>
+  </form>
+
+  {% if subjects %}
+    <ul class="cards">
+      {% for subject in subjects %}
+        <li class="card">
+          <p class="card__code">{{ subject.code }}</p>
+          <h2 class="card__name"><a href="{{ subject.get_absolute_url }}">{{ subject.name }}</a></h2>
+          <p class="card__meta">{{ subject.professor }}／{{ subject.credits }}単位{% if subject.term %}／{{ subject.term }}{% endif %}</p>
+          <p class="card__price">{{ subject.price }} 円</p>
+          <p class="card__stock">残り {{ subject.stock }} 枠</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="empty">
+      {% if q %}「{{ q }}」に一致する科目はありません。{% else %}ご案内できる科目はありません。{% endif %}
+    </p>
+  {% endif %}
+{% endblock %}

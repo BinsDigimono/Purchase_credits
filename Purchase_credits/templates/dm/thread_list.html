@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}メッセージ | 単位マーケット{% endblock %}
+
+{% block content %}
+  <h1 class="title">メッセージ</h1>
+
+  {% if threads %}
+    <ul class="threads">
+      {% for thread in threads %}
+        <li class="thread">
+          <a class="thread__link" href="{{ thread.get_absolute_url }}">
+            <span class="thread__body">
+              <span class="thread__name">{{ thread.partner_user }}</span>
+              <span class="thread__preview">
+                {{ thread.last_message.body|default:"（まだメッセージはありません）"|truncatechars:40 }}
+              </span>
+            </span>
+            <span class="thread__side">
+              <span class="thread__time">{{ thread.updated_at|date:"n/j H:i" }}</span>
+              {% if thread.unread %}<span class="badge">{{ thread.unread }}</span>{% endif %}
+            </span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="empty">やり取りはまだありません。科目の詳細から担当教授に相談できます。</p>
+  {% endif %}
+{% endblock %}

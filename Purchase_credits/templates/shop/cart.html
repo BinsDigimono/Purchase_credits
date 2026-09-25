@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}カート | 単位マーケット{% endblock %}
+
+{% block content %}
+  <h1 class="title">カート</h1>
+
+  {% if items %}
+    <table class="table">
+      <tr><th>科目</th><th>担当</th><th class="num">価格</th><th></th></tr>
+      {% for item in items %}
+        <tr>
+          <td>
+            <a href="{{ item.subject.get_absolute_url }}">{{ item.subject.name }}</a>
+            <span class="sub">{{ item.subject.code }}／{{ item.subject.credits }}単位</span>
+          </td>
+          <td>{{ item.subject.professor }}</td>
+          <td class="num">{{ item.subject.price }} 円</td>
+          <td>
+            <form method="post" action="{% url 'shop:cart_remove' item.subject.pk %}">
+              {% csrf_token %}
+              <button class="linkbutton" type="submit">外す</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      <tr><th colspan="2">合計</th><td class="num">{{ total }} 円</td><td></td></tr>
+    </table>
+
+    <form class="checkout" method="post" action="{% url 'shop:checkout' %}">
+      {% csrf_token %}
+      <button class="btn" type="submit">申し込みを確定する</button>
+    </form>
+  {% else %}
+    <p class="empty">カートは空です。<a href="{% url 'shop:subject_list' %}">科目一覧へ</a></p>
+  {% endif %}
+{% endblock %}

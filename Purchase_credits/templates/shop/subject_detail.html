@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{ subject.name }} | 単位マーケット{% endblock %}
+
+{% block content %}
+  <p class="back"><a href="{% url 'shop:subject_list' %}">← 科目一覧</a></p>
+
+  <article class="detail">
+    <p class="detail__code">{{ subject.code }}</p>
+    <h1 class="detail__name">{{ subject.name }}</h1>
+
+    <dl class="detail__spec">
+      <dt>担当</dt><dd>{{ subject.professor }}</dd>
+      <dt>学科</dt><dd>{{ subject.department|default:"未設定" }}</dd>
+      <dt>開講</dt><dd>{{ subject.term|default:"未設定" }}</dd>
+      <dt>単位数</dt><dd>{{ subject.credits }}</dd>
+      <dt>価格</dt><dd>{{ subject.price }} 円</dd>
+      <dt>残り枠</dt><dd>{% if subject.is_sold_out %}なし{% else %}{{ subject.stock }}{% endif %}</dd>
+    </dl>
+
+    {% if subject.description %}<div class="detail__body">{{ subject.description|linebreaks }}</div>{% endif %}
+
+    <section class="detail__action">
+      {% if in_cart %}
+        <p class="incart">カートに入っています。</p>
+        <p><a href="{% url 'shop:cart' %}">カートを見る →</a></p>
+      {% elif error %}
+        <p class="error">{{ error }}</p>
+      {% else %}
+        <form method="post" action="{% url 'shop:cart_add' subject.pk %}">
+          {% csrf_token %}
+          <button class="btn" type="submit">カートに入れる</button>
+        </form>
+      {% endif %}
+
+      {% if user.is_student %}
+        <form method="post" action="{% url 'dm:start' subject.pk %}">
+          {% csrf_token %}
+          <button class="linkbutton" type="submit">担当教授に相談する</button>
+        </form>
+      {% endif %}
+    </section>
+  </article>
+{% endblock %}

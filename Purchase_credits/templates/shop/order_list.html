@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}申込履歴 | 単位マーケット{% endblock %}
+
+{% block content %}
+  <h1 class="title">申込履歴</h1>
+
+  {% if orders %}
+    <table class="table">
+      <tr><th>申込番号</th><th>日時</th><th>科目数</th><th class="num">合計</th></tr>
+      {% for order in orders %}
+        <tr>
+          <td><a href="{{ order.get_absolute_url }}">#{{ order.pk }}</a></td>
+          <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+          <td>{{ order.items.all|length }}</td>
+          <td class="num">{{ order.total_price }} 円</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p class="empty">申し込みはまだありません。</p>
+  {% endif %}
+{% endblock %}
